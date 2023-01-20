@@ -1,6 +1,7 @@
 % Tim C. Whalen, last edited May 2021
-% Plots Whalen 2021 Figure 4 for one simulation run
-% Note that Fig 4C pools 5 simulation runs; this code only strS_total one.
+% John Parker updated, Jan 2023
+% Plots Whalen 2021 Figure 7 for one simulation run
+% Note that Fig 7C pools 5 simulation runs; this code only strS_total one.
 
 %% TO RUN
 % First, run Whalen2021_plot_fits with the desired output from SNr.cc
@@ -10,7 +11,7 @@
 scale_by_power = 1; % to multiply strengths by osc power
 
 % JEP
-force_freq = 2;
+%force_freq = 2;
 [~, freq_ind] = min(abs(data.osc.freqs-force_freq)); % index closest to forcing frequency
 %
 

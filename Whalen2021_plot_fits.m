@@ -1,12 +1,13 @@
 % Tim C. Whalen, last edited May 2021
+% Minor changes by John Parker, Jan 2023
 % Plots results of SNr.cc simulations and compares to in vivo data
-% e.g. Fig 1, Fig 2B-C from Whalen et al. 2021
+% Refer to git repo for more information
 % Ignores SNr neurons which fire slower than 5 Hz (should be none with
 % proper tuning) to match experimental methods from Whalen et al. 2020 JNP
 
 %% TO RUN
 % To compare against in vivo data, requires the following data from the
-% tcwhalen/Whalen2021 github repository
+% jparker25/Whalen_et_al_2021 github repository
 %   Whalen2021_SNr_pow_by_ecog.mat
 %   Whalen2021_SNr_conf_depleted.mat
 %   Whalen2021_SNr_conf_control.mat
@@ -15,7 +16,7 @@
 % Specify which figure you want to recreate by uncommenting the section
 % below
 % Or, set the values yourself:
-% infile: the filename 9with no extension) outputted by SNr.cc
+% infile: the filename with no extension) outputted by SNr.cc
 % control: 1 if control (pacemaking, not osc GPe) simulation (-control in .cc)
 % T: time length of recording (-T in .cc)
 % force_freq: the frequency of oscillating GPe neurons (-osc_freq in .cc)
@@ -63,9 +64,9 @@ scatter_colors = 0;
 % scatter_colors = 0;
 
 %% OTHER PARAMETERS TO CHANGE if you've run SNr.cc with custom inputs
-% T = 50;
-% force_freq = 2;
-% search_freqs = [0.5, 4];
+T = 50;
+force_freq = 2; % Comment out for certain MATLAB files
+search_freqs = [0.5, 4]; % Comment out for certain MATLAB files
 n_snr = 100; % assumes there are two GPe populations (oscillaitng and poisson) each of size n_snr/2
 
 
