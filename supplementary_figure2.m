@@ -1,7 +1,46 @@
+% supplementary_figure2.m
+clear all;
+
+twoHz_dir = "jitter_sims/no_jitter_freq_2/T50/random_run_0";
+
+dir = sprintf('%s/competitive.*',twoHz_dir);
+copyfile(dir,'data/')
+force_freq = 2;
+search_freqs = [0.5, 4];
+Whalen2021_plot_fits;
+Whalen2021_plot_balance;
+close all;
+
+twoHz.cents = cents;
+twoHz.non_osc_cent = non_osc_cent;
+twoHz.xnoG = xnoG;
+twoHz.ynoS = ynoS;
+twoHz.pttype_osc = pttype_osc;
+twoHz.strG_total = strG_total;
+twoHz.strS_total = strS_total;
+
+fifteenHz_dir = "jitter_sims/no_jitter_freq_15/T50/random_run_8";
+dir = sprintf('%s/competitive.*',fifteenHz_dir);
+copyfile(dir,'data/')
+force_freq = 15;
+search_freqs = [8, 22];
+Whalen2021_plot_fits;
+Whalen2021_plot_balance;
+close all;
+
+fifteenHz.cents = cents;
+fifteenHz.non_osc_cent = non_osc_cent;
+fifteenHz.xnoG = xnoG;
+fifteenHz.ynoS = ynoS;
+fifteenHz.pttype_osc = pttype_osc;
+fifteenHz.strG_total = strG_total;
+fifteenHz.strS_total = strS_total;
+
+
+
 figure
 subplot(1,2,1)
 hold on
-%plot([0,-cent_int/cent_slope],[cent_int,0],'--','Color',[.9 .9 .9],'LineWidth',5)
 scatter(twoHz.cents(1,1), twoHz.cents(1,2), 2000, [1 .75 .75], '.') 
 scatter(twoHz.cents(2,1), twoHz.cents(2,2), 2000, [.75 .75 1], '.')
 scatter(twoHz.non_osc_cent(1), twoHz.non_osc_cent(2), 2000, 'k', '.')
@@ -82,17 +121,6 @@ scatter(fifteen_all(:,1),fifteen_all(:,2),200,[0.7 0.7 0.7],'.')
 scatter(twoHz.strG_total(twoHz.pttype_osc==-1),twoHz.strS_total(twoHz.pttype_osc==-1),200,'b','.')
 scatter(twoHz.strG_total(twoHz.pttype_osc==1),twoHz.strS_total(twoHz.pttype_osc==1),200,'r','.')
 
-
-
-%scatter(fifteenHz.cents(1,1), fifteenHz.cents(1,2), 2000, [0.9 0.9 0.9], 'x') 
-%scatter(fifteenHz.cents(2,1), fifteenHz.cents(2,2), 2000, 'k', 'x')
-%scatter(fifteenHz.non_osc_cent(1), fifteenHz.non_osc_cent(2), 2000, 'k', 'x')
-
-
-
-%scatter(fifteenHz.xnoG,fifteenHz.ynoS,200,[0.8 0.8 0.8],'x')
-%scatter(fifteenHz.strG_total(fifteenHz.pttype_osc==-1),fifteenHz.strS_total(fifteenHz.pttype_osc==-1),200,'k','.')
-%scatter(fifteenHz.strG_total(fifteenHz.pttype_osc==1),fifteenHz.strS_total(fifteenHz.pttype_osc==1),200,[0.9 0.9 0.9],'.')
 
 hold off
 
