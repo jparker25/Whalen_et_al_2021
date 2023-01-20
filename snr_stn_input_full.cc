@@ -1,34 +1,13 @@
 /*
 SNr Network Model from Whalen et al. 2021, in press
-Original code by Ryan Phillips, edited by Tim Whalen, last edited May 2021
-Contact: timcwhalen@gmail.com
+Original code by Ryan Phillips, edited by Tim Whalen, edited by John Parker, last edited Jan 2023
+Contact: timcwhalen@gmail.com or owner of repo, or authors of corresponding paper
 
-Simulates a conductance-based (or quadratic integrate & fire) SNr network model with inputs from synthetic GPe spike trains to study propagation of delta rhythms in Parkinsonism
+Simulates a conductance-based (or quadratic integrate & fire) SNr network model with inputs from synthetic GPe spike trains and experimental STN values to study propagation of delta rhythms in Parkinsonism
 
 ----------
 
-To generate results from the paper, first compile this file:
-g++ -std=c++17 -O2 snr_stn_input.cc -o snr_stn_input
-
-Then, run SNr, using the appropriate input flags to adjust the model
-These commands will reproduce the data used in each model of the paper:
-1. Fully segregated pathways (Fig 1A-D)
-   ./snr_stn_input -arch 1 -dt .025 -T 50 -sd 749141 -dep_off -fac_off -gstnton 0.15 0.25 -iapp -0.000 -0.000 -glk 0.04 0.04 -c3 0 0 -w .05 .25 -wg .05 .25 -wstn .025 .025 -fixedGABA -70 -osc_freq 2 -fracup_gpe 0.55 -osc_shape_gpe rect -osc_mod_gpe 24 24 -osc_mod_gpe2 24 24 -osc_cent_gpe 25 -n_delays_gpe 1 -delay_std_gpe 34.6164 -n_pop 100 -pg_cross 0.00 -ps_cross 1.00 -write_syn 0 data/full_seg -o >data/full_seg.hst
-2. Partially segregated pathways (Fig 1E-G)
-   ./snr_stn_input -arch 1 -dt .025 -T 50 -sd 749141 -dep_off -fac_off -gstnton 0.15 0.25 -iapp -0.000 -0.000 -glk 0.04 0.04 -c3 0 0 -w .05 .25 -wg .05 .25 -wstn .025 .025 -fixedGABA -70 -osc_freq 2 -fracup_gpe 0.55 -osc_shape_gpe rect -osc_mod_gpe 24 24 -osc_mod_gpe2 24 24 -osc_cent_gpe 25 -n_delays_gpe 1 -delay_std_gpe 34.6164 -n_pop 100 -pg_cross 0.25 -ps_cross 0.75 -write_syn 0 data/partial_seg -o >data/partial_seg.hst
-3. Competitive architecture (Fig 2, 4)
-	   ./snr_stn_input -arch 2 -dt .025 -T 50 -sd 749141 -dep_off -fac_off -gstnton 0.15 0.25 -iapp -0.000 -0.000 -glk 0.04 0.04 -c3 0 0 -w .05 .25 -wg .05 .25 -wstn .025 .025 -fixedGABA -70 -osc_freq 2 -fracup_gpe 0.55 -osc_shape_gpe rect -osc_mod_gpe 24 24 -osc_mod_gpe2 24 24 -osc_cent_gpe 25 -n_delays_gpe 1 -delay_std_gpe 34.6164 -n_pop 100 -bip_snr 0.5 -write_syn 0 data/competitive -o >data/competitive.hst
-4. Competitive architecture in control conditions (Fig 2D)
-   ./snr_stn_input -arch 2 -dt .025 -T 50 -sd 749141 -fac_off -dep_off -gstnton 0.225 0.375 -iapp -0.000 -0.000 -glk 0.04 0.04 -c3 0.2 0.2 -w .05 .25 -wg .05 .25 -wstn .025 .025 -fixedGABA -70 -osc_freq 2 -fracup_gpe 0.55 -osc_shape_gpe rect -osc_mod_gpe 0 0 -osc_mod_gpe2 0 0 -osc_cent_gpe 25 -n_delays_gpe 1 -delay_std_gpe 34.6164 -n_pop 100 -bip_snr 0.5 -write_syn 0 -control 1 data/competitive_control -o >data/competitive_control.hst
-3. Competitive architecture with QIF neurons (Fig 3A-B)
-   ./snr_stn_input -qif 1 -qif_sigma 0 -arch 2 -dt .025 -T 50 -sd 749341 -dep_off -fac_off -gstnton 0.001 0.001 -iapp -0.000 -0.000 -glk 0.04 0.04 -c3 0 0 -w .0015 .0075 -wg .0015 .0075 -wstn .025 .025 -fixedGABA -70 -osc_freq 2 -fracup_gpe 0.55 -osc_shape_gpe rect -osc_mod_gpe 24 24 -osc_mod_gpe2 24 24 -osc_cent_gpe 25 -n_delays_gpe 1 -delay_std_gpe 34.6164 -n_pop 100 -bip_snr 0.5 -write_syn 0 data/competitive_qif -o >data/competitive_qif.hst
-6. Competitive architecture with QIF neurons and noise (Fig 3C, along with the above model in #5)
-   ./snr_stn_input -qif 1 -qif_sigma 0.015 -arch 2 -dt .025 -T 50 -sd 749341 -dep_off -fac_off -gstnton 0.001 0.001 -iapp -0.000 -0.000 -glk 0.04 0.04 -c3 0 0 -w .0015 .0075 -wg .0015 .0075 -wstn .025 .025 -fixedGABA -70 -osc_freq 2 -fracup_gpe 0.55 -osc_shape_gpe rect -osc_mod_gpe 24 24 -osc_mod_gpe2 24 24 -osc_cent_gpe 25 -n_delays_gpe 1 -delay_std_gpe 34.6164 -n_pop 100 -bip_snr 0.5 -write_syn 0 data/competitive_qif_noise015 -o >data/competitive_qif_noise015.hst
-   ./snr_stn_input -qif 1 -qif_sigma 0.03 -arch 2 -dt .025 -T 50 -sd 749341 -dep_off -fac_off -gstnton 0.00095 0.00095 -iapp -0.000 -0.000 -glk 0.04 0.04 -c3 0 0 -w .0015 .0075 -wg .0015 .0075 -wstn .025 .025 -fixedGABA -70 -osc_freq 2 -fracup_gpe 0.55 -osc_shape_gpe rect -osc_mod_gpe 24 24 -osc_mod_gpe2 24 24 -osc_cent_gpe 25 -n_delays_gpe 1 -delay_std_gpe 34.6164 -n_pop 100 -bip_snr 0.5 -write_syn 0 data/competitive_qif_noise030 -o >data/competitive_qif_noise030.hst
-   ./snr_stn_input -qif 1 -qif_sigma 0.045 -arch 2 -dt .025 -T 50 -sd 749341 -dep_off -fac_off -gstnton 0.00085 0.00085 -iapp -0.000 -0.000 -glk 0.04 0.04 -c3 0 0 -w .0015 .0075 -wg .0015 .0075 -wstn .025 .025 -fixedGABA -70 -osc_freq 2 -fracup_gpe 0.55 -osc_shape_gpe rect -osc_mod_gpe 24 24 -osc_mod_gpe2 24 24 -osc_cent_gpe 25 -n_delays_gpe 1 -delay_std_gpe 34.6164 -n_pop 100 -bip_snr 0.5 -write_syn 0 data/competitive_qif_noise045 -o >data/competitive_qif_noise045.hst
-   ./snr_stn_input -qif 1 -qif_sigma 0.06 -arch 2 -dt .025 -T 50 -sd 749341 -dep_off -fac_off -gstnton 0.0008 0.0008 -iapp -0.000 -0.000 -glk 0.04 0.04 -c3 0 0 -w .0015 .0075 -wg .0015 .0075 -wstn .025 .025 -fixedGABA -70 -osc_freq 2 -fracup_gpe 0.55 -osc_shape_gpe rect -osc_mod_gpe 24 24 -osc_mod_gpe2 24 24 -osc_cent_gpe 25 -n_delays_gpe 1 -delay_std_gpe 34.6164 -n_pop 100 -bip_snr 0.5 -write_syn 0 data/competitive_qif_noise060 -o >data/competitive_qif_noise060.hst
-   ./snr_stn_input -qif 1 -qif_sigma 0.075 -arch 2 -dt .025 -T 50 -sd 749341 -dep_off -fac_off -gstnton 0.0006 0.0006 -iapp -0.000 -0.000 -glk 0.04 0.04 -c3 0 0 -w .0015 .0075 -wg .0015 .0075 -wstn .025 .025 -fixedGABA -70 -osc_freq 2 -fracup_gpe 0.55 -osc_shape_gpe rect -osc_mod_gpe 24 24 -osc_mod_gpe2 24 24 -osc_cent_gpe 25 -n_delays_gpe 1 -delay_std_gpe 34.6164 -n_pop 100 -bip_snr 0.5 -write_syn 0 data/competitive_qif_noise075 -o >data/competitive_qif_noise075.hst
-   ./snr_stn_input -qif 1 -qif_sigma 0.09 -arch 2 -dt .025 -T 50 -sd 749341 -dep_off -fac_off -gstnton 0.0004 0.0004 -iapp -0.000 -0.000 -glk 0.04 0.04 -c3 0 0 -w .0015 .0075 -wg .0015 .0075 -wstn .025 .025 -fixedGABA -70 -osc_freq 2 -fracup_gpe 0.55 -osc_shape_gpe rect -osc_mod_gpe 24 24 -osc_mod_gpe2 24 24 -osc_cent_gpe 25 -n_delays_gpe 1 -delay_std_gpe 34.6164 -n_pop 100 -bip_snr 0.5 -write_syn 0 data/competitive_qif_noise090 -o >data/competitive_qif_noise090.hst
+To generate results from the paper, run python script run_snr_stn_full.py
 
 Running this file will produce several output text files in ./data
 - .prp: properties file, which lists connection matrices, synaptic strengths and tonic excitation
@@ -37,9 +16,9 @@ Running this file will produce several output text files in ./data
 - .stn: like .gpe for synthetic STN neurons (but none are used in the paper, so this file will be blank)
 - .sp: voltages of each SNr neuron over time; each row is a timestep, first column is t, each subsequent column is a /t-separated voltage for every cell
 
-See companion MATLAB code to use these outputs to generate the figures from Whalen et al. 2021
-
+See companion MATLAB code and Python code to use these outputs to generate the figures from Whalen et al. 2021
 */
+
 
 #include <math.h>
 #include <iostream>
