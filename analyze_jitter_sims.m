@@ -1,19 +1,25 @@
 % analyze_jitter_sims.m
+% John Parker, last edited Jan 2023
+% Analyzes all jitter simulation output and generates CSV for plotting
 % Comment out force_freq and search_freq initial variables in
 % Whalen2021_plot_fits before running.
 
 data_direc = 'jitter_sims'; % directory where all jitter results are stored
 
-tj1 = [100 500];
+% Changes below may lead to instability
+
+% Default jitter parameters
+tj1 = [100 500]; 
 tj2 = [1000 2000];
 ffreq = [2 15 25];
 sfreqs = [[0.5 4]; [8 30]; [12 35]];
 T = 50;
 runs = [0 6 7 8 9 10];
 
-output_data = zeros(length(runs)*size(sfreqs,1)*length(tj1)+length(runs)*length(ffreq),20);
+output_data = zeros(length(runs)*size(sfreqs,1)*length(tj1)+length(runs)*length(ffreq),20); % variable to store data
 
 count = 0;
+% Iterate through jitter sims and analyze with Whalen2021_plot_fits
 for i = 1:length(tj1)
     for f = 1:length(ffreq)
         for r=1:length(runs)
@@ -33,6 +39,7 @@ for i = 1:length(tj1)
     end
 end
 
+% Iterate through no jitter sims and analyze with Whalen2021_plot_fits
 for f = 1:length(ffreq)
     for r = 1:length(runs)
         dir = sprintf('%s/no_jitter_freq_%g/T%g/random_run_%g/competitive.*',data_direc,ffreq(f),T,runs(r))
@@ -50,6 +57,7 @@ for f = 1:length(ffreq)
     end
 end
 
+% Save output to CSV for further analysis
 output_table = array2table(output_data);
 output_table.Properties.VariableNames(1:20) = {'Frequency','Jitter?','T1','T2','total Time','Random Seed run','APIP Scale','AP','IP','MFR','MCV2','FAP','FIP','NonOsc','Ratio','APCV','IPCV','Low Freq','Hi Freq','Force Freq'};
 writetable(output_table,sprintf('%s/jitter_results.csv',data_direc));

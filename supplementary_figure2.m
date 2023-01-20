@@ -1,10 +1,13 @@
 % supplementary_figure2.m
+% John Parker, last edited Jan 2023
 % Comment out force_freq and search_freq initial variables in
 % Whalen2021_plot_fits before running.
 clear all;
 
-twoHz_dir = "jitter_sims/no_jitter_freq_2/T50/random_run_0";
+% Changes below may lead to instability
 
+% Analyze 2Hz simulation
+twoHz_dir = "jitter_sims/no_jitter_freq_2/T50/random_run_0"; 
 dir = sprintf('%s/competitive.*',twoHz_dir);
 copyfile(dir,'data/')
 force_freq = 2;
@@ -13,6 +16,7 @@ Whalen2021_plot_fits;
 Whalen2021_plot_balance;
 close all;
 
+% Store 2Hz simulation data
 twoHz.cents = cents;
 twoHz.non_osc_cent = non_osc_cent;
 twoHz.xnoG = xnoG;
@@ -21,6 +25,7 @@ twoHz.pttype_osc = pttype_osc;
 twoHz.strG_total = strG_total;
 twoHz.strS_total = strS_total;
 
+% Analyze 15Hz simulation
 fifteenHz_dir = "jitter_sims/no_jitter_freq_15/T50/random_run_8";
 dir = sprintf('%s/competitive.*',fifteenHz_dir);
 copyfile(dir,'data/')
@@ -30,6 +35,7 @@ Whalen2021_plot_fits;
 Whalen2021_plot_balance;
 close all;
 
+% Store 15Hz simulation data
 fifteenHz.cents = cents;
 fifteenHz.non_osc_cent = non_osc_cent;
 fifteenHz.xnoG = xnoG;
@@ -39,7 +45,7 @@ fifteenHz.strG_total = strG_total;
 fifteenHz.strS_total = strS_total;
 
 
-
+% Plot figure
 figure
 subplot(1,2,1)
 hold on
@@ -68,7 +74,6 @@ set(gcf,'Position',[10 400 450 400])
 
 subplot(1,2,2)
 hold on
-%plot([0,-cent_int/cent_slope],[cent_int,0],'--','Color',[.9 .9 .9],'LineWidth',5)
 scatter(fifteenHz.cents(1,1), fifteenHz.cents(1,2), 2000, [1 .75 .75], '.') 
 scatter(fifteenHz.cents(2,1), fifteenHz.cents(2,2), 2000, [.75 .75 1], '.')
 scatter(fifteenHz.non_osc_cent(1), fifteenHz.non_osc_cent(2), 2000, 'k', '.')
@@ -116,9 +121,6 @@ scatter(twoHz.cents(1,1), twoHz.cents(1,2), 2000, [1 .75 .75], '.')
 scatter(twoHz.cents(2,1), twoHz.cents(2,2), 2000, [.75 .75 1], '.')
 scatter(mean(fifteen_all(:,1)),mean(fifteen_all(:,2)),2000,[0.9 0.9 0.9],'.')
 scatter(fifteen_all(:,1),fifteen_all(:,2),200,[0.7 0.7 0.7],'.')
-
-%scatter(twoHz.non_osc_cent(1), twoHz.non_osc_cent(2), 2000, 'k', '.')
-%scatter(twoHz.xnoG,twoHz.ynoS,200,[0.8 0.8 0.8],'.')
 
 scatter(twoHz.strG_total(twoHz.pttype_osc==-1),twoHz.strS_total(twoHz.pttype_osc==-1),200,'b','.')
 scatter(twoHz.strG_total(twoHz.pttype_osc==1),twoHz.strS_total(twoHz.pttype_osc==1),200,'r','.')

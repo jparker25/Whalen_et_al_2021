@@ -1,18 +1,28 @@
+# John Parker, last edited Jan 2023
+# Plots jitter related simulations for 15Hz cases (Figure 4)
+# No additional analysis is performed
+# Refer to git repo for more information
 import numpy as np
 from matplotlib import pyplot as plt
 import pandas as pd
-import os, sys
+import os
 
 def run_cmd(str):
+    # simple function to run commands on the terminal through python
     print(f"{str}\n")
     os.system(str)
 
-results_file = "~/Whalen_et_al_2021/jitter_sims/jitter_results.csv"
-T1 = [100,500]; T2 = [1000,2000];
-df = pd.read_csv(results_file)
 
-cols = df.columns
+jitter_sims_direc = "/home/jep/Whalen_et_al_2021/jitter_sims" # change to corresponding directory on local machine
 
+# Edits below may lead to instability
+results_file = f"{jitter_sims_direc}/jitter_results.csv"  # where CSV file is stored from MATLAB script
+T1 = [100,500]; T2 = [1000,2000]; # default jitter params
+df = pd.read_csv(results_file) # read in CSV
+
+cols = df.columns # read in pandas data
+
+# EXP data bounds
 mfr = [16.6597, 18.2274, 19.9521];
 mcv2 = [0.661594, 0.714409, 0.770275];
 fap = [0.310595, 0.410526, 0.516192];
@@ -22,19 +32,20 @@ ratio = [2.01356, 2.76119, 3.81588];
 apcv = [0.378699, 0.559011, 0.746587];
 ipcv = [0.512115, 0.666985, 0.825455];
 
+# organizing data
 exps = [mfr, fap, fip, nonOsc, ratio]
 exps_lims = [25, 0.7, 0.7,0.7, 5]
 labels = ["FR (Hz)", "Frac. AP", "Frac. IP", "Frac. No Osc.", "Power Ratio"]
 
+# Create overall figure and adjust for visibility
 fig = plt.figure(figsize=(16,8),dpi=300)
-sub1 = 4; sub2 = 10; sub3 = 8; sub2offset = 2;
-gs = fig.add_gridspec(12,sub1+sub2+sub3+2)
-
+sub1 = 4; sub2 = 10; sub3 = 8; sub2offset = 2; 
+gs = fig.add_gridspec(12,sub1+sub2+sub3+2) 
 ax00 = fig.add_subplot(gs[0:6,0:sub1])
 ax10 = fig.add_subplot(gs[6:,0:sub1])
 
+# Create panels A and D
 axes = [ax00,ax10]
-
 fig_label = ["A","D"]
 scale = 1.0;
 for i in [0,1]:
@@ -96,8 +107,7 @@ for i in [0,1]:
     axes[i].text(-0.18,0.95,fig_label[i],fontsize=20,fontweight="bold",transform=axes[i].transAxes)
     axes[0].legend(prop={'size':8})
 
-
-fig_label = ["C","D"]
+# Create panels B and E
 for i in [0,1]:
     t1 = T1[i]; t2 = T2[i];
     jitter15 = df[(df['Jitter?'] == 1) & (df['Frequency'] == 15) & (df['T1'] == t1) & (df['T2'] == t2)]
@@ -142,7 +152,7 @@ for i in [0,1]:
         axe[0].text(-0.7,0.95,"B" if i == 0 else "E",fontsize=20,fontweight="bold",transform=axe[0].transAxes)
 
 
-
+# Create panels C and F
 fig_label = ["C","F"]
 colors = ["dimgray","rosybrown","darkturquoise","seagreen","darkmagenta","royalblue"]
 for i in [0,1]:
@@ -156,7 +166,7 @@ for i in [0,1]:
 
     count = 0;
     for run in [0,6,7,8,9,10]:
-        freqs = np.loadtxt(f"/home/jep/Whalen2021/jitter_profile_tests/results_summary/NEW/frequency_profiles_data/frequency_profile_t1_{t1}_t2_{t2}_freq_{freq}_run_{run}.txt")
+        freqs = np.loadtxt(f"{jitter_sims_direc}/t1_{t1}_t2_{t2}_freq_{freq}/T50/random_run_{run}/frequency_tracker.txt") 
 
         axe.plot(freqs[:,0],freqs[:,1],label="Jitter Freq",color=colors[count])
         ylims = axe.get_ylim()
@@ -172,9 +182,10 @@ for i in [0,1]:
         axe.text(-0.1,0.95,fig_label[i],fontsize=20,fontweight="bold",transform=axe.transAxes)
         count += 1
 
+# Adjust figure and save
 plt.subplots_adjust(hspace=10)
-
 fig.savefig("jitter_figure.eps",bbox_inches='tight')
 plt.close()
 
+# Open figure
 run_cmd("xdg-open jitter_figure.eps")

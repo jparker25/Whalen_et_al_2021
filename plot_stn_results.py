@@ -1,3 +1,6 @@
+# John Parker, last edited Jan 2023
+# Plots STN related results for 15Hz cases (Figure 5 and supplemental figure 1)
+# Refer to git repo for more information
 import numpy as np
 from scipy.signal import find_peaks
 from matplotlib import pyplot as plt
@@ -7,18 +10,15 @@ import matplotlib.gridspec as gridspec
 import scipy.integrate as integrate
 import pandas as pd
 
+# Edits below may lead to instability
+
 def run_cmd(cmd):
+    # simple function to run commands on the terminal through python
     print(cmd)
     os.system(cmd)
 
-def get_freq(data):
-    freq = np.zeros(data.shape[1]-1)
-    for n in range(len(freq)):
-        pks,_ = find_peaks(data[:,n+1],height=(-20))
-        freq[n] = len(pks)/(data[-1,0]);
-    return np.mean(freq)
-
 def paper_figure(sim_csv,real_csv,w):
+    # Plots figure 5
     sims=pd.read_csv(sim_csv)
     real=pd.read_csv(real_csv)
 
@@ -85,6 +85,7 @@ def paper_figure(sim_csv,real_csv,w):
     run_cmd(f"xdg-open paper_fig_{w}.eps")
 
 def supplemental_figure(sim_dir,w):
+    # Plots supplemental figure 1
     spks = np.loadtxt(f"{sim_dir}/sim_gstn_rng_0.13_0.23_wstn_{w}/competitive.hst")
     gstns = np.loadtxt(f"{sim_dir}/sim_gstn_rng_0.13_0.23_wstn_{w}/stn_data_ON.txt")
     rates = np.array([spks[(spks[:,1]==n) & (spks[:,0] > 3)].shape[0]/(50-3) for n in range(100)])
@@ -96,7 +97,6 @@ def supplemental_figure(sim_dir,w):
     ax.set_ylabel(r"$f$ (Hz)")
 
     sns.despine()
-    fig_labels = ["A","B"]
     for k in ['left','right','top','bottom']:
             ax.spines[k].set_linewidth(3)
             ax.tick_params('both',width=3)
