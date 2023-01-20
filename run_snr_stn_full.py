@@ -68,7 +68,7 @@ sim = 1
 tot_time = 0;
 tot_sims = len(animals)*len(ranges)*len(wgs)*animal_samples*len(rands)
 animal_sims = len(ranges)*len(wgs)*animal_samples*len(rands)
-dir = "large_run";
+dir = "stn_sims";
 run_cmd(f"mkdir {dir}")
 for animal in range(len(animals)):
     animal_dir = f"{dir}/animal_{animals[animal]}"

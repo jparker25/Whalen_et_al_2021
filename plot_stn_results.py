@@ -84,7 +84,7 @@ def paper_figure(sim_csv,real_csv,w):
 
     run_cmd(f"xdg-open paper_fig_{w}.eps")
 
-def supplemental_figure(sim_dir,no_connection_dir,w):
+def supplemental_figure(sim_dir,w):
     spks = np.loadtxt(f"{sim_dir}/sim_gstn_rng_0.13_0.23_wstn_{w}/competitive.hst")
     gstns = np.loadtxt(f"{sim_dir}/sim_gstn_rng_0.13_0.23_wstn_{w}/stn_data_ON.txt")
     rates = np.array([spks[(spks[:,1]==n) & (spks[:,0] > 3)].shape[0]/(50-3) for n in range(100)])
@@ -107,7 +107,7 @@ def supplemental_figure(sim_dir,no_connection_dir,w):
     run_cmd("xdg-open supplemental_figure1.eps")
 
 
-paper_figure("large_run_results_revised.csv","real_data_results.csv",6)
-supplemental_figure("large_run/animal_2/rand_True/sample_3","wstn_only/animal_3/rand_True/sample_1/",6)
+paper_figure("stn_sims_results.csv","real_data_results.csv",6)
+supplemental_figure("stn_sims/animal_2/rand_True/sample_3",6)
 
 sys.exit()
