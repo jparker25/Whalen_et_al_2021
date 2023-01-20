@@ -1,4 +1,6 @@
 % supplementary_figure2.m
+% Comment out force_freq and search_freq initial variables in
+% Whalen2021_plot_fits before running.
 clear all;
 
 twoHz_dir = "jitter_sims/no_jitter_freq_2/T50/random_run_0";

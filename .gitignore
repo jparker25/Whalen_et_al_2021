@@ -3,3 +3,12 @@ data/*hst
 data/*prp
 data/*sp
 data/*stn
+data_snr_original/*
+SNr 
+SNr_jitter
+snr_stn_input_full
+jitter_sims/*
+large_run/*
+*eps
+*csv
+stn_sims/*
