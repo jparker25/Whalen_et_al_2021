@@ -21,7 +21,7 @@ Simulations were run in C++ on a Linux machine with an Ubuntu based distribution
 
 For MATLAB code `data` and `ext_depend` folders and subfolders should be added to the path.
 
-For Python code, some modules may need to be installed.
+For Python code, some modules may need to be installed (e.g. `numpy`, `pandas`, `matplotlib`,`scipy`,`seaborn`).
 
 
 # Figures and Execution
@@ -30,6 +30,7 @@ Several figures use the same simulation data and may not need to be executed mul
 * Figure 1
    - `$ g++ -std=c++17 -O2 SNr.cc -o SNr`
     - `$ ./SNr -arch 2 -dt .025 -T 50 -sd 749141 -dep_off -fac_off -gstnton 0.15 0.25 -iapp -0.000 -0.000 -glk 0.04 0.04 -c3 0 0 -w .05 .25 -wg .05 .25 -wstn .025 .025 -fixedGABA -70 -osc_freq 2 -fracup_gpe 0.55 -osc_shape_gpe rect -osc_mod_gpe 24 24 -osc_mod_gpe2 24 24 -osc_cent_gpe 25 -n_delays_gpe 1 -delay_std_gpe 34.6164 -n_pop 100 -bip_snr 0.5 -write_syn 0 data/competitive -o >data/competitive.hst`
+    - Follow the documentation in `ap_ip_examples_phase_offset.m`
 
 * Figure 2 B-D
     - `$ g++ -std=c++17 -O2 SNr.cc -o SNr`
@@ -54,14 +55,13 @@ Several figures use the same simulation data and may not need to be executed mul
     - Follow the documentation in `Whalen2021_plot_pairwise_phase.m`
 
 * Figure 4
-    - `$ python3 plot_freq_test_jitter.py`
-    - `$ python3 analyze_runs.py`
+    - `$ python3 run_jitter_sims.py`
     - Run `analyze_jitter_sims.m` in MATLAB.
     - `$ python3 plot_jitter_results.py`
 
 * Figure 5 and Supplemental 1
     - `$ python3 run_snr_stn_full.py`
-    - Run `analyze_multi_sims.m` in MATLAB.
+    - Run `analyze_stn_sims.m` in MATLAB.
     - `$ python3 plot_stn_results.py`
 
 * Figure 6 A-B
