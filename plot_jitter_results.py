@@ -7,7 +7,7 @@ def run_cmd(str):
     print(f"{str}\n")
     os.system(str)
 
-results_file = "/home/jep/Whalen2021/jitter_profile_tests/final_results.csv"
+results_file = "~/Whalen_et_al_2021/jitter_sims/jitter_results.csv"
 T1 = [100,500]; T2 = [1000,2000];
 df = pd.read_csv(results_file)
 
@@ -36,22 +36,20 @@ ax10 = fig.add_subplot(gs[6:,0:sub1])
 axes = [ax00,ax10]
 
 fig_label = ["A","D"]
-scale = 1e-5;
+scale = 1.0;
 for i in [0,1]:
     t1 = T1[i]; t2 = T2[i];
-    jitter25 = df[(df['Jitter?'] == "Yes") & (df['Frequency'] == 15) & (df['T1'] == t1) & (df['T2'] == t2)]
-    jitter2 = df[(df['Jitter?'] == "Yes") & (df['Frequency'] == 2) & (df['T1'] == t1) & (df['T2'] == t2)]
-    noJ25 = df[(df['Jitter?'] == "No") & (df['Frequency'] == 15)]
-    noJ2 = df[(df['Jitter?'] == "No") & (df['Frequency'] == 2)]
+    jitter15 = df[(df['Jitter?'] == 1) & (df['Frequency'] == 15) & (df['T1'] == t1) & (df['T2'] == t2)]
+    jitter2 = df[(df['Jitter?'] == 1) & (df['Frequency'] == 2) & (df['T1'] == t1) & (df['T2'] == t2)]
+    noJ25 = df[(df['Jitter?'] == 0) & (df['Frequency'] == 15)]
+    noJ2 = df[(df['Jitter?'] == 0) & (df['Frequency'] == 2)]
 
-    markers, caps, bars = axes[i].errorbar(0,np.mean(jitter25['AP'])*scale,yerr=np.std(jitter25['AP'])*scale,color="tab:orange",marker=">",capsize=2,alpha=1,markersize=12)
+    markers, caps, bars = axes[i].errorbar(0,np.mean(jitter15['AP'])*scale,yerr=np.std(jitter15['AP'])*scale,color="tab:orange",marker=">",capsize=2,alpha=1,markersize=12)
     [bar.set_alpha(0.5) for bar in bars]
     [cap.set_alpha(0.5) for cap in caps]
-    markers, caps, bars = axes[i].errorbar(0.15,np.mean(jitter25['IP'])*scale,yerr=np.std(jitter25['IP'])*scale,color="tab:orange",marker=">",capsize=2,alpha=1,markersize=12)
+    markers, caps, bars = axes[i].errorbar(0.15,np.mean(jitter15['IP'])*scale,yerr=np.std(jitter15['IP'])*scale,color="tab:orange",marker=">",capsize=2,alpha=1,markersize=12)
     [bar.set_alpha(0.5) for bar in bars]
     [cap.set_alpha(0.5) for cap in caps]
-
-
 
 
     markers, caps, bars = axes[i].errorbar(0,np.mean(jitter2['AP'])*scale,yerr=np.std(jitter2['AP'])*scale,color="g",marker=">",capsize=2,alpha=1,markersize=12)
@@ -96,18 +94,16 @@ for i in [0,1]:
     axes[i].set_ylabel("Power",fontsize=12)
 
     axes[i].text(-0.18,0.95,fig_label[i],fontsize=20,fontweight="bold",transform=axes[i].transAxes)
-
-
     axes[0].legend(prop={'size':8})
 
 
 fig_label = ["C","D"]
 for i in [0,1]:
     t1 = T1[i]; t2 = T2[i];
-    jitter25 = df[(df['Jitter?'] == "Yes") & (df['Frequency'] == 15) & (df['T1'] == t1) & (df['T2'] == t2)]
-    jitter2 = df[(df['Jitter?'] == "Yes") & (df['Frequency'] == 2) & (df['T1'] == t1) & (df['T2'] == t2)]
-    noJ25 = df[(df['Jitter?'] == "No") & (df['Frequency'] == 15)]
-    noJ2 = df[(df['Jitter?'] == "No") & (df['Frequency'] == 2)]
+    jitter15 = df[(df['Jitter?'] == 1) & (df['Frequency'] == 15) & (df['T1'] == t1) & (df['T2'] == t2)]
+    jitter2 = df[(df['Jitter?'] == 1) & (df['Frequency'] == 2) & (df['T1'] == t1) & (df['T2'] == t2)]
+    noJ25 = df[(df['Jitter?'] == 0) & (df['Frequency'] == 15)]
+    noJ2 = df[(df['Jitter?'] == 0) & (df['Frequency'] == 2)]
 
     axe = []
     if i == 0:
@@ -115,18 +111,16 @@ for i in [0,1]:
     else:
         axe = [fig.add_subplot(gs[6:,k:k+sub2offset]) for k in range(sub1+1,sub1+sub2,sub2offset)]
 
-    scale = [50/47,1,1,1,1,1,1,1,1]
+    scale = [1,1,1,1,1,1,1,1,1]
     exp_cols = ["MFR","FAP","FIP","NonOsc","Ratio"]
     for j in range(len(exp_cols)):
-        #axe[j].errorbar(0,exps[j][1],yerr=exps[j][1]-exps[j][0],color="blue",marker="_",capsize=2,ecolor="k",markersize=6,elinewidth=1.5)
 
         axe[j].hlines(exps[j][1],0.85,1.15,color="b",linewidth=2.5)
         axe[j].hlines(exps[j][0],0.90,1.1,color="k",linewidth=1.5)
         axe[j].hlines(exps[j][2],0.90,1.1,color="k",linewidth=1.5)
         axe[j].vlines(1,exps[j][0],exps[j][2],color="k",linewidth=1.5)
 
-
-        axe[j].scatter(0.95,np.mean(jitter25[exp_cols[j]])*scale[j],color="tab:orange",marker=">",s=160)
+        axe[j].scatter(0.95,np.mean(jitter15[exp_cols[j]])*scale[j],color="tab:orange",marker=">",s=160)
         axe[j].scatter(1.05,np.mean(noJ25[exp_cols[j]])*scale[j],color="gray",marker="<",s=160)
         axe[j].scatter(0.95,np.mean(jitter2[exp_cols[j]])*scale[j],color="g",marker=">",s=160)
         axe[j].scatter(1.05,np.mean(noJ2[exp_cols[j]])*scale[j],color="tab:purple",marker="<",s=160)
@@ -139,7 +133,6 @@ for i in [0,1]:
         axe[j].spines['top'].set_visible(False)
         axe[j].spines['bottom'].set_visible(False)
         axe[j].tick_params(axis="x",length=0)
-        #axe[j].set_xticks([0],[labels[j]],rotation=5,fontsize=12)
         axe[j].set_xlabel(labels[j],rotation=10,fontsize=12)
         axe[j].spines['left'].set_linewidth(3)
         axe[j].tick_params(axis="y",width=3,labelsize=10)
@@ -181,8 +174,7 @@ for i in [0,1]:
 
 plt.subplots_adjust(hspace=10)
 
-#fig.tight_layout()
-fig.savefig("jitter_revised_test.eps",bbox_inches='tight')
+fig.savefig("jitter_figure.eps",bbox_inches='tight')
 plt.close()
 
-run_cmd("xdg-open jitter_revised_test.eps")
+run_cmd("xdg-open jitter_figure.eps")

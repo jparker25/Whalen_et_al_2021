@@ -1,4 +1,6 @@
 % analyze_jitter_sims.m
+% Comment out force_freq and search_freq initial variables in
+% Whalen2021_plot_fits before running.
 
 data_direc = 'jitter_sims'; % directory where all jitter results are stored
 
@@ -33,7 +35,7 @@ end
 
 for f = 1:length(ffreq)
     for r = 1:length(runs)
-        dir = sprintf('%s/no_jitter_freq_%g/T%g/random_run_%g/competitive.*',data_direc,ffreq(f),T,runs(r));
+        dir = sprintf('%s/no_jitter_freq_%g/T%g/random_run_%g/competitive.*',data_direc,ffreq(f),T,runs(r))
         copyfile(dir,'data/')
         force_freq = ffreq(f);
         search_freqs = sfreqs(f,:);
@@ -50,5 +52,5 @@ end
 
 output_table = array2table(output_data);
 output_table.Properties.VariableNames(1:20) = {'Frequency','Jitter?','T1','T2','total Time','Random Seed run','APIP Scale','AP','IP','MFR','MCV2','FAP','FIP','NonOsc','Ratio','APCV','IPCV','Low Freq','Hi Freq','Force Freq'};
-writetable(output_table,sprintf('%s_results_revised.csv',data_direc));
+writetable(output_table,sprintf('%s/jitter_results.csv',data_direc));
 
